@@ -154,10 +154,50 @@ git:(branch) git branch -d release
 <br>
 
 ### bugfix branch
-> 설명
+> release branch에서 발생한 버그를 바로 수정하는 branch(일시적)
+<br>
 
-branch work flow 설명
-<br><br>
+\- release branch에서 버그를 발견했을 경우 bugfix branch를 생성한다.
+1. bugfix branch를 생성하고 이동한다.<h6> ex) pdf_workflow 1.9</h6>
+```
+git:(release) git checkout -b bugfix
+```
+<br>
+
+\- 작업이 완료되면 release branch에 bugfix branch를 병합한다.
+1. release branch로 이동한다.
+```
+git:(bugfix) git checkout release
+```
+2. release branch에 bugfix branch를 병합한다.<h6> ex) pdf_workflow 1.11</h6>
+```
+git:(release) git merge bugfix
+```
+3. develop branch에 필요한 내용을 병합한다.<h6> ex) pdf_workflow 1.11</h6>
+```
+방법1 : 특정한 파일만 병합하는 경우
+git:(release) git checkout bugfix
+git:(bugfix) git checkout -p develop [특정파일]
+
+방법2 : 특정한 파일만 제외하고 병합하는 경우
+git:(master) git checkout develop
+git:(develop) git merge --no-commit --no-ff bugfix -X theirs
+git:(develop) git reset HEAD [제외할 파일]
+git:(develop) git clean -fd
+git:(develop) git commit -m "message"
+```
+<br>
+
+\- 작업이 완료되거나, 필요없어진 경우 branch를 제거한다.
+1. 다른 branch로 이동한다.
+```
+git:(bugfix) git checkout branch
+```
+2. bugfix branch를 삭제한다.
+```
+git:(branch) git branch -d bugfix
+```
+<br>
 
 ### hotfix branch
 > 설명
