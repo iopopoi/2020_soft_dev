@@ -103,10 +103,55 @@ git:(other_branch) git branch -d [new_feature_branch]
 <br>
 
 ### release branch
-> 설명
+> 배포를 위한 최종적인 버그 수정, 문서 추가 등 release와 직접적으로 관련된 작업을 진행하는 branch (일시적)<br>
+작업 완료 후 master branch에 병합하며, 배포 후 develop branch에도 병합한다.
+<br>
 
-branch work flow 설명
-<br><br>
+\- 배포를 위해, develop branch에서 release branch를 생성한다.
+1. develop branch로 이동한다.
+```
+git:(branch) git checkout develop
+```
+2. release branch를 생성하고 이동한다.<h6> ex) pdf_workflow 1.7</h6>
+```
+git:(develop) git checkout -b release
+```
+<br>
+
+\- release branch에서 배포가 가능한 상태가 되었을 경우
+1. master branch로 이동한다.
+```
+git:(release) git checkout master
+```
+2. master branch에 release branch를 병합한다.<h6> ex) pdf_workflow 1.12</h6>
+```
+git:(master) git merge release
+```
+3. master branch에서 github에 새로운 버전을 release한다.<h6> ex) pdf_workflow 2.0</h6>
+4. develop branch에 필요한 내용을 병합한다.
+```
+방법1 : 특정한 파일만 병합하는 경우
+git:(master) git checkout release
+git:(release) git checkout -p develop [특정파일]
+
+방법2 : 특정한 파일만 제외하고 병합하는 경우
+git:(master) git checkout develop
+git:(develop) git merge --no-commit --no-ff release -X theirs
+git:(develop) git reset HEAD [제외할 파일]
+git:(develop) git clean -fd
+git:(develop) git commit -m "message"
+```
+
+\- 작업이 완료되거나, 필요없어진 경우 branch를 제거한다.
+1. 다른 branch로 이동한다.
+```
+git:(release) git checkout branch
+```
+2. release branch를 삭제한다.<h6> ex) pdf_workflow 2.10</h6>
+```
+git:(branch) git branch -d release
+```
+<br>
 
 ### bugfix branch
 > 설명
