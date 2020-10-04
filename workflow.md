@@ -200,7 +200,54 @@ git:(branch) git branch -d bugfix
 <br>
 
 ### hotfix branch
-> 설명
+> 배포된 버전에서 발생한 버그를 수정 하는 branch(일시적)<br>
+배포한 버전에 긴급하게 수정을 해야 할 필요가 있을 경우, master branch에서 분기하는 branch이다.
 
-branch work flow 설명
-<br><br>
+
+<br>
+
+\- 배포한 버전에서 버그가 발생했을 때, master branch에서 hotfix branch를 생성한다.
+1. master branch로 이동한다.
+```
+git:(branch) git checkout master
+```
+2. hotfix branch를 생성하고 이동한다.<h6> ex) pdf_workflow 2.2</h6>
+```
+git:(master) git checkout -b hotfix
+```
+<br>
+
+\- 작업이 완료되면 master branch에 병합한다.
+1. master branch로 이동한다.
+```
+git:(hotfix) git checkout master
+```
+2. master branch에 hotfix branch를 병합한다.<h6> ex) pdf_workflow 2.3</h6>
+```
+git:(master) git merge hotfix
+```
+3. master branch에서 github에 새로운 버전을 release한다.<h6> ex) pdf_workflow 2.4</h6>
+4. develop branch에 필요한 내용을 병합한다.
+```
+방법1 : 특정한 파일만 병합하는 경우
+git:(master) git checkout hotfix
+git:(hotfix) git checkout -p develop [특정파일]
+
+방법2 : 특정한 파일만 제외하고 병합하는 경우
+git:(master) git checkout develop
+git:(develop) git merge --no-commit --no-ff hotfix -X theirs
+git:(develop) git reset HEAD [제외할 파일]
+git:(develop) git clean -fd
+git:(develop) git commit -m "message"
+```
+<br>
+
+\- 작업이 완료되거나, 필요없어진 경우 branch를 제거한다.
+1. 다른 branch로 이동한다.
+```
+git:(hotfix) git checkout branch
+```
+2. hotfix branch를 삭제한다.
+```
+git:(branch) git branch -d hotfix
+```
