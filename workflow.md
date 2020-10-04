@@ -46,10 +46,61 @@ git:(master) git checkout develop
 <br>
 
 ### feature branch
-> 설명
+> 새로운 기능 개발 및 버그 수정이 필요할 때, develop branch 또는 다른 feature branch에서 분기되는 branch (일시적)<br>
+로컬저장소에서 관리하며, 개발이 완료되면 develop branch로 병합하여 다른 사람들과 공유한다.
 
-branch work flow 설명
-<br><br>
+<br>
+
+\- 기능을 구현할 때, 상위 branch에서 분기한다.
+1. 상위 branch에서 새로운 feature branch를 생성한다.<h6> ex) pdf_workflow 1.2 / 1.3 / 2.5 / 2.6 / 2.11 </h6>
+  ```
+  git:(prev_branch) git branch [new_feature_branch]
+  ```
+2. 새로운 feature branch로 이동한다.
+```
+git:(prev_branch) git checkout [new_feature_branch]
+```
+<br>
+
+\- 작업이 완료된 branch는 상위 branch에 병합한다.
+1. 상위 branch로 이동한다.
+```
+git:(new_feature_branch) git checkout prev_branch
+```
+2. 작업이 완료된 branch를 병합한다. (rebase 예제)
+```
+git:(prev_branch) git rebase [new_feature_branch]
+```
+<br>
+
+\- 아래 example과 같이 branch C가 branch B보다 먼저 작업이 완료되어 branch A에 병합해야 하는 경우 rebase의 onto 옵션을 사용한다.
+```
+<example>
+───A+───A2───A1─────────A3 (A)
+   └────B1───B2 (B)     └───C1'───C2'(C`)
+             └───C1───C2 (C)
+```
+
+1. rebase의 onto 옵션을 사용한다.<h6> ex) pdf_workflow 1.4</h6>
+
+```
+git rebase --onto branchA branchB branchC
+```
+
+
+<br>
+
+\- 생성된 feature branch가 불필요한 경우, 해당 branch를 제거한다.
+1. 다른 branch로 이동한다.
+```
+git:(new_feature_branch) git checkout other_branch
+```
+2. branch를 삭제한다.<h6> ex) pdf_workflow 2.7</h6>
+```
+git:(other_branch) git branch -d [new_feature_branch]
+```
+
+<br>
 
 ### release branch
 > 설명
